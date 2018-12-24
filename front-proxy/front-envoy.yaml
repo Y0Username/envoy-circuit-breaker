@@ -30,7 +30,7 @@ static_resources:
             config: {}
   clusters:
   - name: service1
-    connect_timeout: 1s
+    connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
     # http2_protocol_options: {}
