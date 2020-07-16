@@ -37,6 +37,7 @@ static_resources:
     circuit_breakers:
       thresholds:
       - priority: DEFAULT
+        max_requests: 1 # http1 does not respect this config
         max_connections: 3
         max_pending_requests: 1
     hosts:
@@ -45,14 +46,17 @@ static_resources:
         port_value: 80
   - name: service2
     connect_timeout: 0.25s
+    max_requests_per_connection: 1 # TODO: test this
     type: strict_dns
     lb_policy: round_robin
-    http2_protocol_options: {}
+    http2_protocol_options:
+      max_concurrent_streams: 1 # TODO: test this
     circuit_breakers:
       thresholds:
       - priority: DEFAULT
         max_requests: 3
-        max_pending_requests: 1
+        max_connections: 1 # http2 does not respect this
+        max_pending_requests: 1 # http2 does not respect this
     hosts:
     - socket_address:
         address: service2

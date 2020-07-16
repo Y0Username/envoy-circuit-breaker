@@ -38,7 +38,9 @@ This is because HTTP2 multiplexes multiple requests over the same tcp connection
 * `cd front-proxy`
 * Start the docker containers:
 
-    `./docker-compose --build -d`
+    `docker-compose build`
+
+    `docker-compose up`
 
 #### Service 1 HTTP1.1 testing:
 [Config](front-proxy/front-envoy.yaml#L37): 
@@ -54,7 +56,7 @@ clusters:
 
 * Start 3 connections to service 1:
 
-    `./test.sh 1 3`
+    `./connections.sh 1 3`
 * See the circuit-breaker trip:
 
     `curl -s localhost:8081/stats | grep service1.circuit_breakers.default`
@@ -64,10 +66,11 @@ clusters:
     cluster.service1.circuit_breakers.default.rq_pending_open: 0
     cluster.service1.circuit_breakers.default.rq_retry_open: 0
     ```
-    
+
 * Try to establish another connection and see the pending flag flip:
-    
+
     `./connection.sh 1`
+
     `curl -s localhost:8081/stats | grep service1.circuit_breakers.default`
     ```
     cluster.service1.circuit_breakers.default.cx_open: 1
@@ -87,7 +90,7 @@ clusters:
     date: Mon, 24 Dec 2018 19:15:30 GMT
     server: envoy
     connection: close
-    
+
     upstream connect error or disconnect/reset before headers%
     ```
 
@@ -105,7 +108,7 @@ clusters:
 
 * Start 3 connections to service 2:
 
-    `./test.sh 2 3`
+    `./connections.sh 2 3`
 * See the circuit-breaker trip:
 
     `curl -s localhost:8081/stats | grep service2.circuit_breakers.default`
@@ -127,6 +130,6 @@ clusters:
     date: Mon, 24 Dec 2018 19:23:12 GMT
     server: envoy
     connection: close
-    
+
     upstream connect error or disconnect/reset before headers%
     ```
